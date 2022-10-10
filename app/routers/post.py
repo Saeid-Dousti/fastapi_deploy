@@ -20,7 +20,7 @@ router = APIRouter(
     tags=['Posts']
 ) #
 
-@app.get("/")
+@router.get("/")
 def root():
     return {"message": "Hello World"}
 
