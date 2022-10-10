@@ -20,10 +20,6 @@ router = APIRouter(
     tags=['Posts']
 ) #
 
-@router.get("/")
-def root():
-    return {"message": "Hello World"}
-
 # @router.get(
 #     "/", response_model=List[schemas.Post]
 # )  #* 10:16 modified the response model
