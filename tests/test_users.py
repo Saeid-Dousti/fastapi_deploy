@@ -1,3 +1,5 @@
+# 15:44
+
 from http import client
 from fastapi.testclient import TestClient
 import pytest
@@ -8,6 +10,8 @@ from app.main import app # to test it
 from app import schemas
 from app.config import settings
 from app.database import get_db, Base
+from alembic import command #* 15:43 use alembic to downgrade and upgrade tables
+
 
 # SQLALCHEMY_DATABASE_URL = f"postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}"
 # we can hardcode this
@@ -21,22 +25,36 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engin
 # Base = declarative_base()
 
 # Dependency
-def override_get_db():
+# def override_get_db(): #* 15:43
+#     db = TestingSessionLocal()
+#     try:
+#         yield db
+#     finally:
+#         db.close()
+
+# app.dependency_overrides[get_db] = override_get_db
+
+# client = TestClient(app)
+
+@pytest.fixture
+def session():
+    Base.metadata.drop_all(bind=engine) # drop tables
+    Base.metadata.create_all(bind=engine) # create tables
     db = TestingSessionLocal()
     try:
         yield db
     finally:
         db.close()
 
-app.dependency_overrides[get_db] = override_get_db
-
-# client = TestClient(app)
-
 @pytest.fixture
-def client():
-    # run our code before we return our testclient
-    Base.metadata.drop_all(bind=engine) # drop tables
-    Base.metadata.create_all(bind=engine) # create tables
+def client(session): #* 15:46
+    def override_get_db(): #* 15:43
+        try:
+            yield session
+        finally:
+            session.close()
+
+    app.dependency_overrides[get_db] = override_get_db
     yield TestClient(app)
 
     # run our code after our test finishes
