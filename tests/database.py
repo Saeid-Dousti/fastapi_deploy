@@ -35,7 +35,7 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engin
 
 # client = TestClient(app)
 
-@pytest.fixture(scope="module") #* 16:01
+@pytest.fixture #* 16:01
 def session():
     Base.metadata.drop_all(bind=engine) # drop tables
     Base.metadata.create_all(bind=engine) # create tables
@@ -45,7 +45,7 @@ def session():
     finally:
         db.close()
 
-@pytest.fixture(scope="module") #* 16:01
+@pytest.fixture #* 16:01
 def client(session): #* 15:46
     def override_get_db(): #* 15:43
         try:
