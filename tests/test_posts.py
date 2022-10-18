@@ -66,3 +66,24 @@ def test_unauthorized_user_create_post(client, test_posts):
     res = client.post("/posts/", json={"title":"arbitrary title", "content": "asdfaf"})
 
     assert res.status_code == 401
+
+def test_unauthorized_user_create_post(client, test_posts):
+    res = client.delete(f"/posts/{test_posts[0].id}")
+
+    assert res.status_code == 401
+
+def test_delete_post_success(authorized_client, test_user, test_posts):
+    res = authorized_client.delete(f"/posts/{test_posts[0].id}")
+
+    assert res.status_code == 204
+
+def test_delete_post_non_exist(authorized_client, test_user, test_posts):
+    res = authorized_client.delete("/posts/10000000000000")
+    assert res.status_code == 404
+
+def test_delete_other_user_post(authorized_client, test_user, test_posts):
+    res = authorized_client.delete(f"/posts/{test_posts[3].id}") #* 17:13 this post blongs to test_user2 
+    
+    assert res.status_code == 403
+
+
