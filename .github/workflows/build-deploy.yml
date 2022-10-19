@@ -77,8 +77,8 @@ jobs:
       #     cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/fastapi:buildcache
       #     cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/fastapi:buildcache,mode=max
       
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+      # - name: Image digest
+      #   run: echo ${{ steps.docker_build.outputs.digest }}
 
   deploy:  
     runs-on: ubuntu-latest
