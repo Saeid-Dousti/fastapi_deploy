@@ -9,7 +9,7 @@ name: Build and Deploy Code
 #     branches:
 #       - "test_branch"
 
-on: [push, pull_request]
+On: [push, pull_request]
 
 jobs:
   job1:
